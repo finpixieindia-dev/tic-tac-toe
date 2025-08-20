@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Tic Tac Toe – 1P/2P/Online</title>
+  <!-- Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="bg"></div>
+
+  <main class="app">
+    <header class="topbar">
+      <h1>♟️ Tic Tac Toe</h1>
+      <div class="right-actions">
+        <button class="btn ghost" id="soundToggle" aria-pressed="false" title="Toggle sound">🔊</button>
+        <button class="btn ghost" id="themeToggle" title="Toggle theme">🌙</button>
+      </div>
+    </header>
+
+    <section class="tabs">
+      <button class="tab active" data-tab="local1">1 Player</button>
+      <button class="tab" data-tab="local2">2 Players</button>
+      <button class="tab" data-tab="online">Online</button>
+    </section>
+
+    <section class="content">
+      <aside class="score">
+        <div class="card glass scoreboard">
+          <div class="row">
+            <div class="pill x">X</div>
+            <div class="score-val" id="scoreX">0</div>
+          </div>
+          <div class="row">
+            <div class="pill o">O</div>
+            <div class="score-val" id="scoreO">0</div>
+          </div>
+          <div class="row">
+            <div class="pill t">TIE</div>
+            <div class="score-val" id="scoreT">0</div>
+          </div>
+        </div>
+
+        <div class="card glass status">
+          <div id="modeLabel">Mode: 1 Player (You = X)</div>
+          <div id="turnLabel">Turn: X</div>
+        </div>
+
+        <div class="card glass controls">
+          <button class="btn primary" id="btnNew">New Game</button>
+          <button class="btn" id="btnReset">Reset Scores</button>
+        </div>
+
+        <div class="card glass info small">
+          <p><strong>Ad placeholders:</strong><br>
+            • Banner at bottom<br>
+            • Interstitial shown after each game
+          </p>
+          <details>
+            <summary>AdMob notes</summary>
+            <p>Use when wrapping as Android app via Cordova/Capacitor:</p>
+            <pre>// Sample AdMob IDs:
+// Banner:       ca-app-pub-3940256099942544/6300978111
+// Interstitial: ca-app-pub-3940256099942544/1033173712
+// Rewarded:     ca-app-pub-3940256099942544/5224354917
+</pre>
+          </details>
+        </div>
+      </aside>
+
+      <section class="board-wrap">
+        <div class="board glass" id="board" aria-label="Tic tac toe board" role="grid">
+          <!-- 9 cells -->
+          <button class="cell" data-idx="0" role="gridcell" aria-label="cell 1"></button>
+          <button class="cell" data-idx="1" role="gridcell" aria-label="cell 2"></button>
+          <button class="cell" data-idx="2" role="gridcell" aria-label="cell 3"></button>
+          <button class="cell" data-idx="3" role="gridcell" aria-label="cell 4"></button>
+          <button class="cell" data-idx="4" role="gridcell" aria-label="cell 5"></button>
+          <button class="cell" data-idx="5" role="gridcell" aria-label="cell 6"></button>
+          <button class="cell" data-idx="6" role="gridcell" aria-label="cell 7"></button>
+          <button class="cell" data-idx="7" role="gridcell" aria-label="cell 8"></button>
+          <button class="cell" data-idx="8" role="gridcell" aria-label="cell 9"></button>
+        </div>
+
+        <!-- Mode Panels -->
+        <div class="panels">
+          <div class="panel active" id="panel-local1">
+            <div class="card glass options">
+              <label class="row between">
+                <span>Difficulty</span>
+                <select id="aiLevel">
+                  <option value="hard" selected>Unbeatable</option>
+                  <option value="medium">Smart</option>
+                  <option value="easy">Easy</option>
+                </select>
+              </label>
+              <label class="row between">
+                <span>Play as</span>
+                <select id="humanPlays">
+                  <option value="X" selected>X</option>
+                  <option value="O">O</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="panel" id="panel-local2">
+            <div class="card glass options">
+              <p>Two players on the same device. X goes first.</p>
+            </div>
+          </div>
+
+          <div class="panel" id="panel-online">
+            <div class="card glass options">
+              <div id="onlineSetupWarning" class="warn hidden">
+                ⚠️ To enable Online, add your Firebase config in JS.
+              </div>
+              <div class="row wrap g8">
+                <input id="roomId" class="input" placeholder="Room ID (e.g., ABC123)" maxlength="12" />
+                <button class="btn" id="btnCreateRoom">Create</button>
+                <button class="btn" id="btnJoinRoom">Join</button>
+                <button class="btn ghost" id="btnLeaveRoom">Leave</button>
+              </div>
+              <p id="onlineStatus">Not connected.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Fake Interstitial (for web preview). Replace with real AdMob interstitial in native wrapper. -->
+  <dialog id="interstitial">
+    <div class="ad-modal glass">
+      <div class="ad-header">Sponsored</div>
+      <div class="ad-body">
+        <div class="ad-box">Interstitial Ad Placeholder</div>
+      </div>
+      <button class="btn primary" id="closeInterstitial">Close</button>
+    </div>
+  </dialog>
+
+  <!-- Banner Ad Placeholder -->
+  <div id="adBanner" class="ad-banner glass">
+    Banner Ad Placeholder
+  </div>
+
+  <!-- Firebase (compat) SDKs for Online mode -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+</body>
+</html>
